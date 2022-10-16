@@ -10,7 +10,8 @@ import pandas as pd
 import joblib
 
 ## TODO: Import any additional libraries you need to define a model
-
+# from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier
 
 # Provided model load function
 def model_fn(model_dir):
@@ -42,9 +43,15 @@ if __name__ == '__main__':
     parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
     
     ## TODO: Add any additional arguments that you will need to pass into your model
+
+    parser.add_argument('--n-estimators', type=int, default=50)
+    parser.add_argument('--min-samples-leaf', type=int, default=10)
+    parser.add_argument('--max-depth', type=int, default=3)
+    
     
     # args holds all passed-in arguments
-    args = parser.parse_args()
+    # args = parser.parse_args()
+    args, _ = parser.parse_known_args()
 
     # Read in csv training file
     training_dir = args.data_dir
@@ -56,15 +63,15 @@ if __name__ == '__main__':
     
     
     ## --- Your code here --- ##
-    
 
     ## TODO: Define a model 
-    model = None
-    
+    model = RandomForestClassifier(n_estimators=args.n_estimators, 
+                                   min_samples_leaf=args.min_samples_leaf, 
+                                   max_depth=args.max_depth,
+                                   n_jobs=-1)
     
     ## TODO: Train the model
-    
-    
+    model.fit(train_x, train_y)
     
     ## --- End of your code  --- ##
     
